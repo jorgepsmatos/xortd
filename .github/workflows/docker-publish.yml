@@ -32,10 +32,13 @@ jobs:
       - name: Build image
         run: docker build . --file Xortd/Dockerfile --tag $IMAGE_NAME
 
+      - name: Log into registry
+        run: echo "${{ secrets.SCALEWAY_DOCKER_REGISTRY_TOKEN }}" | docker login rg.fr-par.scw.cloud/jorgematos -u nologin --password-stdin
+
       - name: Push image
         run: |
-          IMAGE_ID=rg.fr-par.scw.cloud/jorgematos/${{ github.repository }}/$IMAGE_NAME
-          
+          IMAGE_ID=rg.fr-par.scw.cloud/jorgematos/$IMAGE_NAME
+
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
