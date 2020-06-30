@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xortd", "Xortd\Xortd.csproj", "{113CFE62-C5F1-4A73-B3C2-5356AF8E857A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{113CFE62-C5F1-4A73-B3C2-5356AF8E857A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{113CFE62-C5F1-4A73-B3C2-5356AF8E857A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{113CFE62-C5F1-4A73-B3C2-5356AF8E857A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{113CFE62-C5F1-4A73-B3C2-5356AF8E857A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C51E143E-8A2E-461E-990E-48E51847A1EB}
+	EndGlobalSection
+EndGlobal
