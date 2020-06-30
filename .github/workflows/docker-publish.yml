@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: cd Xortd; docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: docker build . --file Xortd/Dockerfile --tag $IMAGE_NAME
 
       - name: Push image
         run: |
