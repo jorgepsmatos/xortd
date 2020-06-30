@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,13 +20,8 @@ namespace Xortd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(o => o.AddPolicy("DefaultCorsPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            }));
-            
+            services.AddCors();
+
             services.AddDbContext<UrlDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -54,17 +46,25 @@ namespace Xortd
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStatusCodePages();
+
             app.UseStaticFiles();
 
             app.UseRouting();
-            
-            app.UseCors();
+
+            app.UseCors(options =>
+                options.SetIsOriginAllowed(x => _ = true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+            );
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}").RequireCors("DefaultCorsPolicy");
+                    "default",
+                    "{controller}/{action=Index}/{id?}");
             });
         }
     }

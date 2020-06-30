@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Xortd.Data;
+using Xortd.Helpers;
 using Xortd.Models;
 
 namespace Xortd.Controllers
 {
+    [EnableCors]
     public class UrlShortener : Controller
     {
-        private UrlDbContext context;
+        private readonly UrlDbContext context;
 
         public UrlShortener(UrlDbContext context)
         {
@@ -25,29 +25,20 @@ namespace Xortd.Controllers
         {
             var shortUrl = context.ShortUrls.FirstOrDefault(s => s.Slug == slug);
 
-            if (shortUrl != null)
-            {
-                return RedirectPermanent(shortUrl.Url);
-            }
+            if (shortUrl == null) return NotFound();
 
-            return LocalRedirect("/");
+            return RedirectPermanent(shortUrl.Url);
         }
 
         [HttpPost]
-        [Route("/create")]
+        [Route("/shorturl")]
         public async Task<IActionResult> Create([FromBody] ShortUrl shortUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid input");
-            }
+            if (!ModelState.IsValid) return BadRequest("Invalid input");
 
-            if (!IsUrlValid(shortUrl.Url))
-            {
-                return BadRequest("Invalid url");
-            }
+            if (!IsUrlValid(shortUrl.Url)) return BadRequest("Invalid url");
 
-            shortUrl.Slug ??= RandomIdGenerator.GetBase62(8);
+            if (string.IsNullOrWhiteSpace(shortUrl.Slug)) shortUrl.Slug = RandomIdGenerator.GetBase62(8);
 
             try
             {
@@ -56,11 +47,14 @@ namespace Xortd.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("Invalid input");
+                return BadRequest("Failed to create short url");
             }
 
 
-            return Created(Url.Action("Get", "UrlShortener", new {slug = shortUrl.Slug}),
+            return Created(Url.Action("Get", "UrlShortener", new
+                {
+                    slug = shortUrl.Slug
+                }),
                 shortUrl);
         }
 
@@ -68,25 +62,6 @@ namespace Xortd.Controllers
         {
             return Uri.TryCreate(url, UriKind.Absolute, out var uriResult)
                    && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-        }
-    }
-
-    public static class RandomIdGenerator
-    {
-        private static char[] _base62chars =
-            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-                .ToCharArray();
-
-        private static Random _random = new Random();
-
-        public static string GetBase62(int length)
-        {
-            var sb = new StringBuilder(length);
-
-            for (var i = 0; i < length; i++)
-                sb.Append(_base62chars[_random.Next(62)]);
-
-            return sb.ToString();
         }
     }
 }
