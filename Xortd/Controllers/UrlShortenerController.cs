@@ -54,7 +54,7 @@ namespace Xortd.Controllers
             return Created(Url.Action("Get", "UrlShortener", new
                 {
                     slug = shortUrl.Slug
-                }),
+                }, Request.Scheme),
                 shortUrl);
         }
 

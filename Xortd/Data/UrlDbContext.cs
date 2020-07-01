@@ -10,11 +10,5 @@ namespace Xortd.Data
         }
 
         public DbSet<ShortUrl> ShortUrls { get; set; }
-        
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseSqlite(@"Data Source=Database\Database.db;");
-        }
     }
 }
