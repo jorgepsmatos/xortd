@@ -35,7 +35,7 @@ jobs:
       - name: Log into registry
         env:
           SCALEWAY_DOCKER_REGISTRY_TOKEN: ${{ secrets.SCALEWAY_DOCKER_REGISTRY_TOKEN }}
-        run: echo "$SCALEWAY_DOCKER_REGISTRY_TOKEN" | docker login rg.fr-par.scw.cloud/jorgematos -u nologin --password-stdin
+        run: docker login rg.fr-par.scw.cloud/jorgematos -u nologin -p $SCALEWAY_DOCKER_REGISTRY_TOKEN
 
       - name: Push image
         run: |
