@@ -45,7 +45,7 @@ namespace Xortd.Controllers
                 await context.AddAsync(shortUrl);
                 await context.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Failed to create short url");
             }
