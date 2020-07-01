@@ -33,7 +33,9 @@ jobs:
         run: docker build . --file Xortd/Dockerfile --tag $IMAGE_NAME
 
       - name: Log into registry
-        run: echo "${{ secrets.SCALEWAY_DOCKER_REGISTRY_TOKEN }}" | docker login rg.fr-par.scw.cloud/jorgematos -u nologin --password-stdin
+        env:
+          SCALEWAY_DOCKER_REGISTRY_TOKEN: ${{ secrets.SCALEWAY_DOCKER_REGISTRY_TOKEN }}
+        run: echo "$SCALEWAY_DOCKER_REGISTRY_TOKEN" | docker login rg.fr-par.scw.cloud/jorgematos -u nologin --password-stdin
 
       - name: Push image
         run: |
