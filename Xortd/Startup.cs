@@ -22,18 +22,21 @@ namespace Xortd
         {
             services.AddCors();
 
-            services.AddDbContext<UrlDbContext>(options =>
-                options.UseSqlite(
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddScoped<UrlDbContext>();
+            
+            services.AddScoped<ApplicationDbContext>();
 
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext dbContext)
         {
+            // Do the DB migrations on startup. Don't know if this makes sense here
+            dbContext.Database.Migrate();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -58,6 +61,7 @@ namespace Xortd
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
+                    .WithExposedHeaders("Location")
             );
 
             app.UseEndpoints(endpoints =>

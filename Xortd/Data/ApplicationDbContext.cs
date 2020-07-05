@@ -3,9 +3,9 @@ using Xortd.Models;
 
 namespace Xortd.Data
 {
-    public class UrlDbContext : DbContext, IUrlDbContext
+    public class ApplicationDbContext : DbContext, IUrlDbContext
     {
-        public UrlDbContext(DbContextOptions<UrlDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 

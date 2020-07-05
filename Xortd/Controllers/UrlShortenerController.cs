@@ -12,9 +12,9 @@ namespace Xortd.Controllers
     [EnableCors]
     public class UrlShortener : Controller
     {
-        private readonly UrlDbContext context;
+        private readonly ApplicationDbContext context;
 
-        public UrlShortener(UrlDbContext context)
+        public UrlShortener(ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -42,7 +42,7 @@ namespace Xortd.Controllers
 
             try
             {
-                await context.AddAsync(shortUrl);
+                await context.ShortUrls.AddAsync(shortUrl);
                 await context.SaveChangesAsync();
             }
             catch (Exception)
