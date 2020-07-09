@@ -29,6 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       - name: Build image
         run: docker build . --file Xortd/Dockerfile --tag $IMAGE_NAME
 
@@ -57,4 +61,6 @@ jobs:
           echo VERSION=$VERSION
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:${{ steps.date.outputs.date }}
           docker push $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:${{ steps.date.outputs.date }}
