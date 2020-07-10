@@ -18,14 +18,24 @@ namespace Xortd.Controllers
         {
             this.context = context;
         }
+        
+        [HttpGet]
+        [Route("/")]
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         [HttpGet]
         [Route("/{slug}")]
-        public IActionResult Get([FromRoute] string slug)
+        public IActionResult Index([FromRoute] string slug)
         {
             var shortUrl = context.ShortUrls.FirstOrDefault(s => s.Slug == slug);
 
-            if (shortUrl == null) return NotFound();
+            if (shortUrl == null)
+            {
+                return View();
+            }
 
             return RedirectPermanent(shortUrl.Url);
         }
@@ -34,11 +44,20 @@ namespace Xortd.Controllers
         [Route("/shorturl")]
         public async Task<IActionResult> Create([FromBody] ShortUrl shortUrl)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid input");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid input");
+            }
 
-            if (!IsUrlValid(shortUrl.Url)) return BadRequest("Invalid url");
+            if (!IsUrlValid(shortUrl.Url))
+            {
+                return BadRequest("Invalid url");
+            }
 
-            if (string.IsNullOrWhiteSpace(shortUrl.Slug)) shortUrl.Slug = RandomIdGenerator.GetBase62(8);
+            if (string.IsNullOrWhiteSpace(shortUrl.Slug))
+            {
+                shortUrl.Slug = RandomIdGenerator.GetBase62(8);
+            }
 
             try
             {
@@ -51,7 +70,7 @@ namespace Xortd.Controllers
             }
 
 
-            return Created(Url.Action("Get", "UrlShortener", new
+            return Created(Url.Action("Index", "UrlShortener", new
                 {
                     slug = shortUrl.Slug
                 }, Request.Scheme),
